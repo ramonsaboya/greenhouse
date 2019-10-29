@@ -1,0 +1,41 @@
+version: 2.1
+
+jobs:
+  order_complete_updater:
+    working_directory: ~/order-complete-updater
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: order-complete-updater-{{ checksum "order-complete-updater/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd order-complete-updater && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: order-complete-updater-{{ checksum "order-complete-updater/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd order-complete-updater && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd order-complete-updater && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd order-complete-updater && docker image build . -t devopsgreenhouse/order-complete-updater:dev
+      - run:
+          name: Pushing docker image
+          command: cd order-complete-updater && docker image push devopsgreenhouse/order-complete-updater:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
+workflows:
+  version: 2
+  build_test_and_deliver:
+    jobs:
+      - order_complete_updater
