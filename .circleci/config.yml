@@ -34,8 +34,144 @@ jobs:
       #- store_artifacts:
       #    path:
 
+  order_service:
+    working_directory: ~/order-service
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: order-service-{{ checksum "order-service/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd order-service && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: order-service-{{ checksum "order-service/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd order-service && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd order-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd order-service && docker image build . -t devopsgreenhouse/order-service:dev
+      - run:
+          name: Pushing docker image
+          command: cd order-service && docker image push devopsgreenhouse/order-service:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
+  payment_distribution:
+    working_directory: ~/payment-distribution
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: payment-distribution-{{ checksum "payment-distribution/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd payment-distribution && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: payment-distribution-{{ checksum "payment-distribution/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd payment-distribution && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd payment-distribution && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd payment-distribution && docker image build . -t devopsgreenhouse/payment-distribution:dev
+      - run:
+          name: Pushing docker image
+          command: cd payment-distribution && docker image push devopsgreenhouse/payment-distribution:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
+  payment_service:
+    working_directory: ~/payment-service
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: payment-service-{{ checksum "payment-service/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd payment-service && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: payment-service-{{ checksum "payment-service/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd payment-service && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd payment-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd payment-service && docker image build . -t devopsgreenhouse/payment-service:dev
+      - run:
+          name: Pushing docker image
+          command: cd payment-service && docker image push devopsgreenhouse/payment-service:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
+  restaurant_service:
+    working_directory: ~/restaurant-service
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: restaurant-service-{{ checksum "restaurant-service/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd restaurant-service && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: restaurant-service-{{ checksum "restaurant-service/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd restaurant-service && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd restaurant-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd restaurant-service && docker image build . -t devopsgreenhouse/restaurant-service:dev
+      - run:
+          name: Pushing docker image
+          command: cd restaurant-service && docker image push devopsgreenhouse/restaurant-service:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
 workflows:
   version: 2
   build_test_and_deliver:
     jobs:
       - order_complete_updater
+      - order_service
+      - payment_distribution
+      - payment_service
+      - restaurant_service
