@@ -6,7 +6,6 @@ import demo.model.Payment;
 import demo.repository.OrderRepository;
 import demo.repository.PaymentRepository;
 import demo.service.PaymentService;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    @HystrixCommand(fallbackMethod = "processPaymentFallback")
     @Override
     public void processPayment(Payment payment) {
         System.out.println("ProcessPayment called()");
