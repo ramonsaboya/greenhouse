@@ -1,0 +1,75 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - net
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - net
+  order-complete-updater:
+    container_name: order-complete-updater
+    build: ./order-complete-updater
+    image: order-complete-updater
+    restart: on-failure
+    ports:
+      - 8005:80
+    networks:
+      - net
+  order-service:
+    container_name: order-service
+    build: ./order-service
+    image: order-service
+    restart: on-failure
+    ports:
+      - 8002:80
+    depends_on:
+      - mongo
+    networks:
+      - net
+  payment-distribution:
+    container_name: payment-distribution
+    build: ./payment-distribution
+    image: payment-distribution
+    restart: on-failure
+    ports:
+      - 8003:80
+    depends_on:
+      - rabbitmq
+      - mongo
+    networks:
+      - net
+  payment-service:
+    container_name: payment-service
+    build: ./payment-service
+    image: payment-service
+    restart: on-failure
+    ports:
+      - 8004:80
+    depends_on:
+      - rabbitmq
+      - mongo
+      - order-complete-updater
+    networks:
+      - net
+  restaurant-service:
+    container_name: restaurant-service
+    build: ./restaurant-service
+    image: restaurant-service
+    restart: on-failure
+    ports:
+      - 8001:80
+    depends_on:
+      - mongo
+    networks:
+      - net
+networks:
+  net:

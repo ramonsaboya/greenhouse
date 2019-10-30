@@ -1,8 +1,8 @@
 server:
-  port: 8002
+  port: 80
 spring:
   application:
     name: ordering-service
   data:
     mongodb:
-      host: mongodb
+      host: mongo
