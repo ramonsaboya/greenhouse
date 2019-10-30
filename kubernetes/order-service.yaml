@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: order-service
+        image: devopsgreenhouse/order-service:dev
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8002
+    targetPort: 80
+  selector:
+    app: order-service

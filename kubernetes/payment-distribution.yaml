@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-distribution
+spec:
+  selector:
+    matchLabels:
+      app: payment-distribution
+  template:
+    metadata:
+      labels:
+        app: payment-distribution
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: payment-distribution
+        image: devopsgreenhouse/payment-distribution:dev
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-distribution
+spec:
+  type: NodePort
+  ports:
+  - port: 8003
+    targetPort: 80
+  selector:
+    app: payment-distribution

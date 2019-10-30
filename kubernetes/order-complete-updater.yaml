@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-complete-updater
+spec:
+  selector:
+    matchLabels:
+      app: order-complete-updater
+  template:
+    metadata:
+      labels:
+        app: order-complete-updater
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: order-complete-updater
+        image: devopsgreenhouse/order-complete-updater:dev
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-complete-updater
+spec:
+  type: NodePort
+  ports:
+  - port: 8005
+    targetPort: 80
+  selector:
+    app: order-complete-updater

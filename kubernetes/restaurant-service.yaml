@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-service
+spec:
+  selector:
+    matchLabels:
+      app: restaurant-service
+  template:
+    metadata:
+      labels:
+        app: restaurant-service
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: restaurant-service
+        image: devopsgreenhouse/restaurant-service:dev
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8001
+    targetPort: 80
+  selector:
+    app: restaurant-service
