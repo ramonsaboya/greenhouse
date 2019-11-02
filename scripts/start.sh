@@ -15,3 +15,5 @@ sleep 10
 kubectl apply -f kubernetes/elasticsearch.yaml
 sleep 10
 kubectl apply -f kubernetes/kibana.yaml
+sleep 60
+kubectl port-forward service/quickstart-kb-http 5601
