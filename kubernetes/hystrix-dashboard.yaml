@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hystrix-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: hystrix-dashboard
+  template:
+    metadata:
+      labels:
+        app: hystrix-dashboard
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: hystrix-dashboard
+        image: devopsgreenhouse/hystrix-dashboard:dev
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hystrix-dashboard
+spec:
+  type: NodePort
+  ports:
+  - port: 7979
+  selector:
+    app: hystrix-dashboard

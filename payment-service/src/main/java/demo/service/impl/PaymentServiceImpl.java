@@ -1,5 +1,6 @@
 package demo.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import demo.model.CreditCardInfo;
 import demo.model.Order;
 import demo.model.Payment;
@@ -27,6 +28,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
+    @HystrixCommand(fallbackMethod = "processPaymentFallback")
     @Override
     public void processPayment(Payment payment) {
         System.out.println("ProcessPayment called()");

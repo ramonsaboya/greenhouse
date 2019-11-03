@@ -166,6 +166,39 @@ jobs:
       #- store_artifacts:
       #    path:
 
+  hystrix_dashboard:
+    working_directory: ~/hystrix-dashboard
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: hystrix-dashboard-{{ checksum "hystrix-dashboard/pom.xml" }}
+      - run:
+          name: Downloading dependencies
+          command: cd hystrix-dashboard && mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: hystrix-dashboard-{{ checksum "hystrix-dashboard/pom.xml" }}
+      - run:
+          name: Building jar
+          command: cd hystrix-dashboard && mvn package
+      - run:
+          name: Logging in on the docker hub
+          command: cd hystrix-dashboard && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
+      - run:
+          name: Building docker image
+          command: cd hystrix-dashboard && docker image build . -t devopsgreenhouse/hystrix-dashboard:dev
+      - run:
+          name: Pushing docker image
+          command: cd hystrix-dashboard && docker image push devopsgreenhouse/hystrix-dashboard:dev
+      #- store_test_results:
+      #    path:
+      #- store_artifacts:
+      #    path:
+
 workflows:
   version: 2
   build_test_and_deliver:
@@ -175,3 +208,4 @@ workflows:
       - payment_distribution
       - payment_service
       - restaurant_service
+      - hystrix_dashboard

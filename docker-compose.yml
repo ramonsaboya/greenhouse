@@ -15,6 +15,15 @@ services:
       - 27017:27017
     networks:
       - net
+  hystrix-dashboard:
+    container_name: hystrix-dashboard
+    build: ./hystrix-dashboard
+    image: hystrix-dashboard
+    restart: on-failure
+    ports:
+      - 7979:7979
+    networks:
+      - net
   order-complete-updater:
     container_name: order-complete-updater
     build: ./order-complete-updater
@@ -22,6 +31,8 @@ services:
     restart: on-failure
     ports:
       - 8005:80
+    depends_on:
+      - hystrix-dashboard
     networks:
       - net
   order-service:
@@ -45,6 +56,7 @@ services:
     depends_on:
       - rabbitmq
       - mongo
+      - hystrix-dashboard
     networks:
       - net
   payment-service:
@@ -58,6 +70,7 @@ services:
       - rabbitmq
       - mongo
       - order-complete-updater
+      - hystrix-dashboard
     networks:
       - net
   restaurant-service:
