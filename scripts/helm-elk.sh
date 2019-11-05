@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get install socat
 curl -Lo helm.tar.gz https://get.helm.sh/helm-v2.15.2-linux-amd64.tar.gz
 tar -zxvf helm.tar.gz 
 sudo mv linux-amd64/helm /usr/local/bin/helm
