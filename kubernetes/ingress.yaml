@@ -41,3 +41,10 @@ spec:
         backend:
           serviceName: restaurant-service
           servicePort: 8001
+  - host: hystrix-dashboard.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hystrix-dashboard
+          servicePort: 7979
