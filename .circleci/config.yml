@@ -242,4 +242,11 @@ workflows:
       - payment_service
       - restaurant_service
       - hystrix_dashboard
-      - deploy
+      - deploy:
+          requires:
+            - order_complete_updater
+            - order_service
+            - payment_distribution
+            - payment_service
+            - restaurant_service
+            - hystrix_dashboard
