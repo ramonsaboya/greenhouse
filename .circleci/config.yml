@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  gcp-gke: circleci/gcp-gke@0.2.0
+
 jobs:
   order_complete_updater:
     working_directory: ~/order-complete-updater
@@ -25,10 +28,10 @@ jobs:
           command: cd order-complete-updater && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd order-complete-updater && docker image build . -t devopsgreenhouse/order-complete-updater:dev
+          command: cd order-complete-updater && docker image build . -t devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd order-complete-updater && docker image push devopsgreenhouse/order-complete-updater:dev
+          command: cd order-complete-updater && docker image push devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
@@ -58,10 +61,10 @@ jobs:
           command: cd order-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd order-service && docker image build . -t devopsgreenhouse/order-service:dev
+          command: cd order-service && docker image build . -t devopsgreenhouse/order-service:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd order-service && docker image push devopsgreenhouse/order-service:dev
+          command: cd order-service && docker image push devopsgreenhouse/order-service:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
@@ -91,10 +94,10 @@ jobs:
           command: cd payment-distribution && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd payment-distribution && docker image build . -t devopsgreenhouse/payment-distribution:dev
+          command: cd payment-distribution && docker image build . -t devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd payment-distribution && docker image push devopsgreenhouse/payment-distribution:dev
+          command: cd payment-distribution && docker image push devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
@@ -124,10 +127,10 @@ jobs:
           command: cd payment-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd payment-service && docker image build . -t devopsgreenhouse/payment-service:dev
+          command: cd payment-service && docker image build . -t devopsgreenhouse/payment-service:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd payment-service && docker image push devopsgreenhouse/payment-service:dev
+          command: cd payment-service && docker image push devopsgreenhouse/payment-service:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
@@ -157,10 +160,10 @@ jobs:
           command: cd restaurant-service && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd restaurant-service && docker image build . -t devopsgreenhouse/restaurant-service:dev
+          command: cd restaurant-service && docker image build . -t devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd restaurant-service && docker image push devopsgreenhouse/restaurant-service:dev
+          command: cd restaurant-service && docker image push devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
@@ -190,14 +193,50 @@ jobs:
           command: cd hystrix-dashboard && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run:
           name: Building docker image
-          command: cd hystrix-dashboard && docker image build . -t devopsgreenhouse/hystrix-dashboard:dev
+          command: cd hystrix-dashboard && docker image build . -t devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
       - run:
           name: Pushing docker image
-          command: cd hystrix-dashboard && docker image push devopsgreenhouse/hystrix-dashboard:dev
+          command: cd hystrix-dashboard && docker image push devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
       #- store_test_results:
       #    path:
       #- store_artifacts:
       #    path:
+
+  deploy:
+    machine: true
+    steps:
+      - gcp-gke/install
+      - gcp-gke/init
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: order-complete-updater
+          container: order-complete-updater
+          image: devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: order-service
+          container: order-service
+          image: devopsgreenhouse/order-service:$CIRCLE_SHA1
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: payment-distribution
+          container: payment-distribution
+          image: devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: payment-service
+          container: payment-service
+          image: devopsgreenhouse/payment-service:$CIRCLE_SHA1
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: restaurant-service
+          container: restaurant-service
+          image: devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
+      - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
+          deployment: hystrix-dashboard
+          container: hystrix-dashboard
+          image: devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
 
 workflows:
   version: 2
@@ -209,3 +248,11 @@ workflows:
       - payment_service
       - restaurant_service
       - hystrix_dashboard
+      - deploy:
+          requires:
+            - order_complete_updater
+            - order_service
+            - payment_distribution
+            - payment_service
+            - restaurant_service
+            - hystrix_dashboard
