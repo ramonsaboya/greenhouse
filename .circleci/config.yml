@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  gcp-gke: circleci/gcp-gke@0.1.0
+
 jobs:
   order_complete_updater:
     working_directory: ~/order-complete-updater
@@ -199,6 +202,36 @@ jobs:
       #- store_artifacts:
       #    path:
 
+  deploy:
+    machine: true
+    steps:
+      - gcp-gke/install
+      - gcp-gke/init
+      - gcp-gke/rollout-image:
+          deployment: order-complete-updater
+          container: order-complete-updater
+          image: devopsgreenhouse/order-complete-updater:$CIRCLE-SHA1
+      - gcp-gke/rollout-image:
+          deployment: order-service
+          container: order-service
+          image: devopsgreenhouse/order-service:$CIRCLE-SHA1
+      - gcp-gke/rollout-image:
+          deployment: payment-distribution
+          container: payment-distribution
+          image: devopsgreenhouse/payment-distribution:$CIRCLE-SHA1
+      - gcp-gke/rollout-image:
+          deployment: payment-service
+          container: payment-service
+          image: devopsgreenhouse/payment-service:$CIRCLE-SHA1
+      - gcp-gke/rollout-image:
+          deployment: restaurant-service
+          container: restaurant-service
+          image: devopsgreenhouse/restaurant-service:$CIRCLE-SHA1
+      - gcp-gke/rollout-image:
+          deployment: hystrix-dashboard
+          container: hystrix-dashboard
+          image: devopsgreenhouse/hystrix-dashboard:$CIRCLE-SHA1
+
 workflows:
   version: 2
   build_test_and_deliver:
@@ -209,3 +242,4 @@ workflows:
       - payment_service
       - restaurant_service
       - hystrix_dashboard
+      - deploy
