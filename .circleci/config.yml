@@ -208,26 +208,32 @@ jobs:
       - gcp-gke/install
       - gcp-gke/init
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: order-complete-updater
           container: order-complete-updater
           image: devopsgreenhouse/order-complete-updater:$CIRCLE-SHA1
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: order-service
           container: order-service
           image: devopsgreenhouse/order-service:$CIRCLE-SHA1
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: payment-distribution
           container: payment-distribution
           image: devopsgreenhouse/payment-distribution:$CIRCLE-SHA1
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: payment-service
           container: payment-service
           image: devopsgreenhouse/payment-service:$CIRCLE-SHA1
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: restaurant-service
           container: restaurant-service
           image: devopsgreenhouse/restaurant-service:$CIRCLE-SHA1
       - gcp-gke/rollout-image:
+          cluster: greenhouse-delivery
           deployment: hystrix-dashboard
           container: hystrix-dashboard
           image: devopsgreenhouse/hystrix-dashboard:$CIRCLE-SHA1
