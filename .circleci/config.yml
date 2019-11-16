@@ -240,7 +240,21 @@ jobs:
 
 workflows:
   version: 2
+  build_test:
+    filters:
+        branches:
+            ignore: master
+    jobs:
+      - order_complete_updater
+      - order_service
+      - payment_distribution
+      - payment_service
+      - restaurant_service
+      - hystrix_dashboard
   build_test_and_deliver:
+    filters:
+        branches:
+            only: master
     jobs:
       - order_complete_updater
       - order_service
