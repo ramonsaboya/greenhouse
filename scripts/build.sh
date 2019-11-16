@@ -5,3 +5,4 @@ cd order-service/ && mvn dependency:go-offline && mvn package && docker image bu
 cd payment-distribution/ && mvn dependency:go-offline && mvn package && docker image build . -t devopsgreenhouse/payment-distribution:dev && cd ..
 cd payment-service/ && mvn dependency:go-offline && mvn package && docker image build . -t devopsgreenhouse/payment-service:dev && cd ..
 cd restaurant-service/ && mvn dependency:go-offline && mvn package && docker image build . -t devopsgreenhouse/restaurant-service:dev && cd ..
+echo oi
