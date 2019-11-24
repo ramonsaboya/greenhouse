@@ -6,3 +6,6 @@ spring:
   data:
     mongodb:
       host: mongo
+logging:
+  path: logs-restaurant-service/
+  file: logs-restaurant-service/app.log
