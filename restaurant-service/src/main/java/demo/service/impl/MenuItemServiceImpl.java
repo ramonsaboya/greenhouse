@@ -29,6 +29,12 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public void uploadMenuItems(List<MenuItem> menuItems) {
-        menuItemRepository.save(menuItems);
+        // TODO Auto-generated method stub
+
     }
+
+    // @Override
+    // public void uploadMenuItems(List<MenuItem> menuItems) {
+    //     menuItemRepository.save(menuItems);
+    // }
 }
