@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: order-service
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: order-service
+    servicePort: 8002
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: payment-distribution
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: payment-distribution
+    servicePort: 8003
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: restaurant-service
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: restaurant-service
+    servicePort: 8001
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hystrix-dashboard
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: hystrix-dashboard
+    servicePort: 7979
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kibana
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: kibana
+    servicePort: 5601

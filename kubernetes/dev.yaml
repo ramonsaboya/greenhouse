@@ -1,0 +1,158 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-1
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-2
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-3
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-4
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-5
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-6
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-greenhouse-7
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/greenhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube

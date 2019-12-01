@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: logstash
+        image: devopsgreenhouse/logstash:dev
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: pvc-logs-hystrix-dashboard
+          mountPath: /usr/share/logstash/logs-hystrix-dashboard
+          subPath: hystrix-dashboard
+        - name: pvc-logs-order-complete-updater
+          mountPath: /usr/share/logstash/logs-order-complete-updater
+          subPath: order-complete-updater
+        - name: pvc-logs-order-service
+          mountPath: /usr/share/logstash/logs-order-service
+          subPath: order-service
+        - name: pvc-logs-payment-distribution
+          mountPath: /usr/share/logstash/logs-payment-distribution
+          subPath: payment-distribution
+        - name: pvc-logs-payment-service
+          mountPath: /usr/share/logstash/logs-payment-service
+          subPath: payment-service
+        - name: pvc-logs-restaurant-service
+          mountPath: /usr/share/logstash/logs-restaurant-service
+          subPath: restaurant-service
+      volumes:
+        - name: pvc-logs-hystrix-dashboard
+          persistentVolumeClaim:
+            claimName: pvc-logs-hystrix-dashboard
+        - name: pvc-logs-order-complete-updater
+          persistentVolumeClaim:
+            claimName: pvc-logs-order-complete-updater
+        - name: pvc-logs-order-service
+          persistentVolumeClaim:
+            claimName: pvc-logs-order-service
+        - name: pvc-logs-payment-distribution
+          persistentVolumeClaim:
+            claimName: pvc-logs-payment-distribution
+        - name: pvc-logs-payment-service
+          persistentVolumeClaim:
+            claimName: pvc-logs-payment-service
+        - name: pvc-logs-restaurant-service
+          persistentVolumeClaim:
+            claimName: pvc-logs-restaurant-service
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+spec:
+  type: NodePort
+  ports:
+  - name: input
+    port: 5000
+  - name: logstash
+    port: 9600
+  selector:
+    app: logstash

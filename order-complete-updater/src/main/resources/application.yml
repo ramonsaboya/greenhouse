@@ -3,3 +3,6 @@ server:
 spring:
   application:
     name: order-complete-updater
+logging:
+  path: logs-order-complete-updater/
+  file: logs-order-complete-updater/app.log
