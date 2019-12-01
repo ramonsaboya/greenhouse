@@ -16,6 +16,14 @@ spec:
       - name: restaurant-service
         image: devopsgreenhouse/restaurant-service:dev
         imagePullPolicy: Always
+        volumeMounts:
+        - name: pvc-logs-restaurant-service
+          mountPath: /logs-restaurant-service
+          subPath: restaurant-service
+      volumes:
+        - name: pvc-logs-restaurant-service
+          persistentVolumeClaim:
+            claimName: pvc-logs-restaurant-service
 
 ---
 

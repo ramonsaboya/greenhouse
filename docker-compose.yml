@@ -146,19 +146,19 @@ services:
     volumes:
       - type: volume
         source: logs-hystrix-dashboard
-        target: /usr/share/logstash//logs-hystrix-dashboard
+        target: /usr/share/logstash/logs-hystrix-dashboard
       - type: volume
         source: logs-order-complete-updater
-        target: /usr/share/logstash//logs-order-complete-updater
+        target: /usr/share/logstash/logs-order-complete-updater
       - type: volume
         source: logs-order-service
-        target: /usr/share/logstash//logs-order-service
+        target: /usr/share/logstash/logs-order-service
       - type: volume
         source: logs-payment-distribution
-        target: /usr/share/logstash//logs-payment-distribution
+        target: /usr/share/logstash/logs-payment-distribution
       - type: volume
         source: logs-payment-service
-        target: /usr/share/logstash//logs-payment-service
+        target: /usr/share/logstash/logs-payment-service
       - type: volume
         source: logs-restaurant-service
         target: /usr/share/logstash/logs-restaurant-service
