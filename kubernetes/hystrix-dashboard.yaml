@@ -16,14 +16,6 @@ spec:
       - name: hystrix-dashboard
         image: devopsgreenhouse/hystrix-dashboard:dev
         imagePullPolicy: Always
-        volumeMounts:
-        - name: pvc-logs-hystrix-dashboard
-          mountPath: /logs-hystrix-dashboard
-          subPath: hystrix-dashboard
-      volumes:
-        - name: pvc-logs-hystrix-dashboard
-          persistentVolumeClaim:
-            claimName: pvc-logs-hystrix-dashboard
 
 ---
 

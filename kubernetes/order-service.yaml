@@ -16,14 +16,6 @@ spec:
       - name: order-service
         image: devopsgreenhouse/order-service:dev
         imagePullPolicy: Always
-        volumeMounts:
-        - name: pvc-logs-order-service
-          mountPath: /logs-order-service
-          subPath: order-service
-      volumes:
-        - name: pvc-logs-order-service
-          persistentVolumeClaim:
-            claimName: pvc-logs-order-service
 
 ---
 
