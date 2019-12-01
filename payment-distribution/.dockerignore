@@ -1,2 +1,3 @@
 **
-!/target/payment-distribution-1.0.0-SNAPSHOT.jar
+!/src
+!/pom.xml
