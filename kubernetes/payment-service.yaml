@@ -16,14 +16,6 @@ spec:
       - name: payment-service
         image: devopsgreenhouse/payment-service:dev
         imagePullPolicy: Always
-        volumeMounts:
-        - name: pvc-logs-payment-service
-          mountPath: /logs-payment-service
-          subPath: payment-service
-      volumes:
-        - name: pvc-logs-payment-service
-          persistentVolumeClaim:
-            claimName: pvc-logs-payment-service
 
 ---
 

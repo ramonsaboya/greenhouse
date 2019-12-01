@@ -16,14 +16,6 @@ spec:
       - name: order-complete-updater
         image: devopsgreenhouse/order-complete-updater:dev
         imagePullPolicy: Always
-        volumeMounts:
-        - name: pvc-logs-order-complete-updater
-          mountPath: /logs-order-complete-updater
-          subPath: order-complete-updater
-      volumes:
-        - name: pvc-logs-order-complete-updater
-          persistentVolumeClaim:
-            claimName: pvc-logs-order-complete-updater
 
 ---
 

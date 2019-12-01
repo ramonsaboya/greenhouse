@@ -48,17 +48,3 @@ spec:
         backend:
           serviceName: hystrix-dashboard
           servicePort: 7979
-  - host: kibana-service.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: kibana
-          servicePort: 5601
-  - host: logstash-service.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: logstash
-          servicePort: 9600

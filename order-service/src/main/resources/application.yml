@@ -2,10 +2,7 @@ server:
   port: 80
 spring:
   application:
-    name: order-service
+    name: ordering-service
   data:
     mongodb:
       host: mongo
-logging:
-  path: logs-order-service/
-  file: logs-order-service/app.log

@@ -202,98 +202,38 @@ jobs:
       #- store_artifacts:
       #    path:
 
-  elasticsearch:
-    working_directory: ~/elasticsearch
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Logging in on the docker hub
-          command: cd elasticsearch && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
-      - run:
-          name: Building docker image
-          command: cd elasticsearch && docker image build --build-arg ELK_VERSION=$ELK_VERSION . -t devopsgreenhouse/elasticsearch:$CIRCLE_SHA1
-      - run:
-          name: Pushing docker image
-          command: cd elasticsearch && docker image push devopsgreenhouse/elasticsearch:$CIRCLE_SHA1
-
-  kibana:
-    working_directory: ~/kibana
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Logging in on the docker hub
-          command: cd kibana && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
-      - run:
-          name: Building docker image
-          command: cd kibana && docker image build --build-arg ELK_VERSION=$ELK_VERSION . -t devopsgreenhouse/kibana:$CIRCLE_SHA1
-      - run:
-          name: Pushing docker image
-          command: cd kibana && docker image push devopsgreenhouse/kibana:$CIRCLE_SHA1
-
-  logstash:
-    working_directory: ~/logstash
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Logging in on the docker hub
-          command: cd logstash && docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
-      - run:
-          name: Building docker image
-          command: cd logstash && docker image build --build-arg ELK_VERSION=$ELK_VERSION . -t devopsgreenhouse/logstash:$CIRCLE_SHA1
-      - run:
-          name: Pushing docker image
-          command: cd logstash && docker image push devopsgreenhouse/logstash:$CIRCLE_SHA1
-
   deploy:
     machine: true
     steps:
       - gcp-gke/install
       - gcp-gke/init
       - gcp-gke/rollout-image:
-          cluster: greenhouse
-          deployment: elasticsearch
-          container: elasticsearch
-          image: devopsgreenhouse/elasticsearch:$CIRCLE_SHA1
-      - gcp-gke/rollout-image:
-          cluster: greenhouse
-          deployment: kibana
-          container: kibana
-          image: devopsgreenhouse/kibana:$CIRCLE_SHA1
-      - gcp-gke/rollout-image:
-          cluster: greenhouse
-          deployment: logstash
-          container: logstash
-          image: devopsgreenhouse/logstash:$CIRCLE_SHA1
-      - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: order-complete-updater
           container: order-complete-updater
           image: devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
       - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: order-service
           container: order-service
           image: devopsgreenhouse/order-service:$CIRCLE_SHA1
       - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: payment-distribution
           container: payment-distribution
           image: devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
       - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: payment-service
           container: payment-service
           image: devopsgreenhouse/payment-service:$CIRCLE_SHA1
       - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: restaurant-service
           container: restaurant-service
           image: devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
       - gcp-gke/rollout-image:
-          cluster: greenhouse
+          cluster: greenhouse-delivery
           deployment: hystrix-dashboard
           container: hystrix-dashboard
           image: devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
@@ -302,9 +242,6 @@ workflows:
   version: 2
   build_test_and_deliver:
     jobs:
-      - elasticsearch
-      - kibana
-      - logstash
       - order_complete_updater
       - order_service
       - payment_distribution
@@ -316,9 +253,6 @@ workflows:
               branches:
                   only: master
           requires:
-            - elasticsearch
-            - kibana
-            - logstash
             - order_complete_updater
             - order_service
             - payment_distribution

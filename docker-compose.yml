@@ -1,5 +1,4 @@
-version: '3.2'
-
+version: '3'
 services:
   rabbitmq:
     container_name: rabbitmq
@@ -7,8 +6,6 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    depends_on:
-      - kibana
     networks:
       - net
   mongo:
@@ -16,65 +13,43 @@ services:
     image: mongo
     ports:
       - 27017:27017
-    depends_on:
-      - kibana
     networks:
       - net
   hystrix-dashboard:
     container_name: hystrix-dashboard
     build: ./hystrix-dashboard
     image: hystrix-dashboard
-    volumes:
-      - type: volume
-        source: logs-hystrix-dashboard
-        target: /logs-hystrix-dashboard
     restart: on-failure
     ports:
       - 7979:7979
-    depends_on:
-      - kibana
     networks:
       - net
   order-complete-updater:
     container_name: order-complete-updater
     build: ./order-complete-updater
     image: order-complete-updater
-    volumes:
-      - type: volume
-        source: logs-order-complete-updater
-        target: /logs-order-complete-updater
     restart: on-failure
     ports:
       - 8005:80
     depends_on:
       - hystrix-dashboard
-      - kibana
     networks:
       - net
   order-service:
     container_name: order-service
     build: ./order-service
     image: order-service
-    volumes:
-      - type: volume
-        source: logs-order-service
-        target: /logs-order-service
     restart: on-failure
     ports:
       - 8002:80
     depends_on:
       - mongo
-      - kibana
     networks:
       - net
   payment-distribution:
     container_name: payment-distribution
     build: ./payment-distribution
     image: payment-distribution
-    volumes:
-      - type: volume
-        source: logs-payment-distribution
-        target: /logs-payment-distribution
     restart: on-failure
     ports:
       - 8003:80
@@ -82,17 +57,12 @@ services:
       - rabbitmq
       - mongo
       - hystrix-dashboard
-      - kibana
     networks:
       - net
   payment-service:
     container_name: payment-service
     build: ./payment-service
     image: payment-service
-    volumes:
-      - type: volume
-        source: logs-payment-service
-        target: /logs-payment-service
     restart: on-failure
     ports:
       - 8004:80
@@ -101,97 +71,18 @@ services:
       - mongo
       - order-complete-updater
       - hystrix-dashboard
-      - kibana
     networks:
       - net
   restaurant-service:
     container_name: restaurant-service
     build: ./restaurant-service
     image: restaurant-service
-    volumes:
-      - type: volume
-        source: logs-restaurant-service
-        target: /logs-restaurant-service
     restart: on-failure
     ports:
       - 8001:80
     depends_on:
       - mongo
-      - kibana
     networks:
       - net
-  elasticsearch:
-    container_name: elasticsearch
-    build:
-      context: elasticsearch/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: volume
-        source: elasticsearch
-        target: /usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-      - 9300:9300
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
-  logstash:
-    container_name: logstash
-    build:
-      context: logstash/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: volume
-        source: logs-hystrix-dashboard
-        target: /usr/share/logstash/logs-hystrix-dashboard
-      - type: volume
-        source: logs-order-complete-updater
-        target: /usr/share/logstash/logs-order-complete-updater
-      - type: volume
-        source: logs-order-service
-        target: /usr/share/logstash/logs-order-service
-      - type: volume
-        source: logs-payment-distribution
-        target: /usr/share/logstash/logs-payment-distribution
-      - type: volume
-        source: logs-payment-service
-        target: /usr/share/logstash/logs-payment-service
-      - type: volume
-        source: logs-restaurant-service
-        target: /usr/share/logstash/logs-restaurant-service
-    ports:
-      - 5000:5000
-      - 9600:9600
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
-  kibana:
-    container_name: kibana
-    build:
-      context: kibana/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    ports:
-      - 5601:5601
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
 networks:
   net:
-  elk:
-    driver: bridge
-volumes:
-  elasticsearch:
-  logs-hystrix-dashboard:
-  logs-order-complete-updater:
-  logs-order-service:
-  logs-payment-distribution:
-  logs-payment-service:
-  logs-restaurant-service:
