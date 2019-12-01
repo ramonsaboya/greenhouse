@@ -11,15 +11,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: order-complete-updater-{{ checksum "order-complete-updater/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f order-complete-updater/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: order-complete-updater-{{ checksum "order-complete-updater/pom.xml" }}
+      - run: mvn -f order-complete-updater/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build order-complete-updater/ -t devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/order-complete-updater:$CIRCLE_SHA1
@@ -35,15 +27,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: order-service-{{ checksum "order-service/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f order-service/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: order-service-{{ checksum "order-service/pom.xml" }}
+      - run: mvn -f order-service/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build order-service/ -t devopsgreenhouse/order-service:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/order-service:$CIRCLE_SHA1
@@ -59,15 +43,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: payment-distribution-{{ checksum "payment-distribution/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f payment-distribution/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: payment-distribution-{{ checksum "payment-distribution/pom.xml" }}
+      - run: mvn -f payment-distribution/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build payment-distribution/ -t devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/payment-distribution:$CIRCLE_SHA1
@@ -83,15 +59,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: payment-service-{{ checksum "payment-service/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f payment-service/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: payment-service-{{ checksum "payment-service/pom.xml" }}
+      - run: mvn -f payment-service/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build payment-service/ -t devopsgreenhouse/payment-service:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/payment-service:$CIRCLE_SHA1
@@ -107,15 +75,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: restaurant-service-{{ checksum "restaurant-service/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f restaurant-service/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: restaurant-service-{{ checksum "restaurant-service/pom.xml" }}
+      - run: mvn -f restaurant-service/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build restaurant-service/ -t devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/restaurant-service:$CIRCLE_SHA1
@@ -131,15 +91,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          key: hystrix-dashboard-{{ checksum "hystrix-dashboard/pom.xml" }}
-      - run:
-          name: Running tests
-          command: mvn -f hystrix-dashboard/pom.xml test
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: hystrix-dashboard-{{ checksum "hystrix-dashboard/pom.xml" }}
+      - run: mvn -f hystrix-dashboard/pom.xml test
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PW}
       - run: docker image build hystrix-dashboard/ -t devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
       - run: docker image push devopsgreenhouse/hystrix-dashboard:$CIRCLE_SHA1
