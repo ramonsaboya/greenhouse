@@ -12,3 +12,6 @@ spring:
       host: mongo
   rabbitmq:
     host: rabbitmq
+logging:
+  path: logs-payment-service/
+  file: logs-payment-service/app.log

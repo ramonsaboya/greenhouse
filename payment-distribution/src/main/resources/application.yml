@@ -9,3 +9,6 @@ spring:
         output: payments
   rabbitmq:
     host: rabbitmq
+logging:
+  path: logs-payment-distribution/
+  file: logs-payment-distribution/app.log

@@ -14,12 +14,5 @@ logging:
   level:
     ROOT: INFO
     org.springframework.web: DEBUG
-
-eureka:
-  client:
-    region: default
-    preferSameZone: false
-    us-east-1:
-      availabilityZones: default
-  instance:
-    virtualHostName: ${spring.application.name}
+  path: logs-hystrix-dashboard/
+  file: logs-hystrix-dashboard/app.log

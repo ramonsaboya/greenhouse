@@ -16,6 +16,14 @@ spec:
       - name: payment-distribution
         image: devopsgreenhouse/payment-distribution:dev
         imagePullPolicy: Always
+        volumeMounts:
+        - name: pvc-logs-payment-distribution
+          mountPath: /logs-payment-distribution
+          subPath: payment-distribution
+      volumes:
+        - name: pvc-logs-payment-distribution
+          persistentVolumeClaim:
+            claimName: pvc-logs-payment-distribution
 
 ---
 
